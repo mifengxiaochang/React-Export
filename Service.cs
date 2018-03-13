@@ -1,7 +1,5 @@
-
     public class DownloadServices 
     {
-        private static AveLogger logger = AveLogger.GetInstance(MethodBase.GetCurrentMethod().DeclaringType);
         
         public byte[] DownLoadMsg(LogRetrieveForGuiDto sensitiveMsg)
         {
