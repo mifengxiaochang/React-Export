@@ -19,6 +19,74 @@ class Download extends React.Component {
             this[event] = this[event].bind(this);
         }
     }
+    
+    export const DownLoadMsg = (sMsg) => {
+    //let sensitiveMsg = JSON.stringify(sensitiveMsg);
+    
+    let options = {
+        url: 'downloadsensitivity',
+        method: 'POST',
+        credentials: 'same-origin',
+        data: JSON.stringify(sMsg)
+    };
+    
+    return fetchUtil(options);
+}
+    window.fetchUtil = function (options, errorFun) {
+    if (getSecurityMode() == "0") {
+        let request = encrypt(options.data);
+        options.data = request;
+    }
+
+    let request = {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            "Content-Type": "application/json"
+        },
+        credentials: "same-origin",
+        body: options.data
+    };
+    if (options.method)
+        request.method = options.method;
+    if (options.cache)
+        request.cache = options.cache;
+
+    return fetch(options.url, request)
+        .then(function (response) {
+            if (response.ok) {
+                return response.text();
+            } else {
+                if (response.status == 401) {
+                    g.loading(false);
+                    g.alert(true, {
+                        title: "warn",
+                        content: "time out,please again",
+						backdropColor: "#ddd",
+                        type: 'i',
+                        clickY: () => { location.href = "Login.aspx?status=1"; }
+                    });
+                } else if (response.status == 400) {
+                    g.loading(false);                 
+                }
+
+                if (errorFun)
+                    errorFun(response);
+                else
+                    throw new Error(response.statusText);
+            }
+        }).then(function (dataStr) {
+            if (dataStr == null || dataStr == '')
+                return null;
+
+            if (getSecurityMode() == "0") {
+                dataStr = decryptResponse(dataStr);
+            }
+
+            return JSON.parse(dataStr);
+        });
+}
+
 
     exportSetting(e) {        
         let sensitiveMsg = this.orderByLogRetrieve();//接收需要下载的数据
