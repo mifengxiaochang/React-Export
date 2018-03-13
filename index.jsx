@@ -53,7 +53,7 @@ class Download extends React.Component {
         }
 
     }
-#### transfer    
+### transfer    
     dataURLtoBlob = (dataurl) => {
         var arr = dataurl.split(','),
             mime = arr[0].match(/:(.*?);/)[1],
