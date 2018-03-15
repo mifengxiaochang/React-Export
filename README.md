@@ -43,3 +43,16 @@
           }
 
       }
+      
+* 用fetch向后台请求数据，后台返回一个文件流实现导出Excel表
+```
+  .then(response => response.blob())
+        .then(blob => {
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = "filename.xlsx";
+            a.click();                    
+        });
+   ```
+   
